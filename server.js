@@ -1,12 +1,22 @@
 //require
+require('dotenv').config();
 const express = require("express");
 const app = express();
 const fruits = require('./models/fruits');
+const mongoose = require('mongoose');
+
 app.set('view engine', 'jsx');
 app.engine('jsx', require('express-react-views').createEngine());
 
 
 /////connection to database ////////
+mongoose.connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+mongoose.connection.once('open', ()=> {
+    console.log('connected to mongo');
+});
 
 
 ///// Middleware////////////
@@ -56,7 +66,7 @@ app.get('/fruits/:index', (req, res) => {
 });
 
 
-///////port to listen---use nodemon to update every modification in real time
+///////port to listen---use nodemon to make the server continue running
 app.listen(3000,() => {
     console.log('listening');
 });
