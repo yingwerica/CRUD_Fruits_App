@@ -2,7 +2,7 @@
 require('dotenv').config();
 const express = require("express");
 const app = express();
-const fruits = require('./models/fruits');
+const Fruit = require('./models/fruits')
 const mongoose = require('mongoose');
 
 app.set('view engine', 'jsx');
@@ -31,11 +31,14 @@ app.use(express.urlencoded({extended:false}));
 //Index, New, Delete, Update, Create, Edit, Show
 
 //Index
-app.get('/fruits/', (req, res) => {
-    res.render('Index', {
-        fruits: fruits
+app.get("/fruits", (req, res) => {
+    Fruit.find({}, (error, allFruits) => {
+      res.render("Index", {
+        fruits: allFruits,
+      });
     });
-});
+  });
+
 //New
 app.get('/fruits/new', (req, res) => {
     res.render('New');
@@ -51,19 +54,21 @@ app.post('/fruits', (req, res)=>{
     } else { //if not checked, req.body.readyToEat is undefined
         req.body.readyToEat = false; //do some data correction
     }
-    fruits.push(req.body);
-    console.log(fruits);
-    res.redirect('/fruits'); //send the user back to /fruits
+    Fruit.create(req.body, (error, createdFruit)=>{
+        res.redirect('/fruits');
+    });
 });
 
 //Edit
 
 //Show
-app.get('/fruits/:index', (req, res) => {
-    res.render("Show",{
-        fruit: fruits[req.params.index]
+app.get("/fruits/:id", (req, res) => {
+    Fruit.findById(req.params.id, (err, foundFruit) => {
+      res.render('Show', {
+        fruit: foundFruit
+      });
     });
-});
+  });
 
 
 ///////port to listen---use nodemon to make the server continue running

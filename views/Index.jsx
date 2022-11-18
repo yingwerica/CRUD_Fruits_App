@@ -1,33 +1,30 @@
-const React = require('react');
+const React = require("react");
 
 class Index extends React.Component {
-  render() {
-      const { fruits } = this.props;
+    render() {
       return (
-              <div>
-                <h1>Fruits Index Page</h1>
-                <nav>
-                    <a href="/fruits/new">Create a New Fruit</a>
-                </nav>
-                <ul>
-                      {fruits.map((fruit, i) => {
-                          return (
-                              <li>
-                                  The{' '}
-                                  <a href={`/fruits/${i}`}>
-                                      {fruit.name}
-                                  </a>{' '}
-                                  is {fruit.color} <br></br>
-                                  {fruit.readyToEat
-                                      ? `It is ready to eat`
-                                      : `It is not ready to eat`}
-                                  <br />
-                              </li>
-                          );
-                      })}
-                </ul>
-              </div>
+        <div>
+          <h1>Fruits index page</h1>
+          <nav>
+            <a href='/fruits/new'>Create a New Fruit</a>
+          </nav>
+          <ul>
+            {this.props.fruits.map((fruit, i) => {
+              return (
+                <li>
+                  The <a href={`/fruits/${fruit.id}`}> {fruit.name} </a> is{" "}
+                  {fruit.color}
+                  {fruit.readyToEat
+                    ? `It is ready to eat. Patewy`
+                    : `It is not ready to eat. Om nom nom`}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
       );
+    }
   }
-}
-module.exports = Index;
+  
+  module.exports = Index;
+  
