@@ -4,6 +4,7 @@ const express = require("express");
 const app = express();
 const Fruit = require('./models/fruits')
 const mongoose = require('mongoose');
+const methodOverride = require('method-override');
 
 app.set('view engine', 'jsx');
 app.engine('jsx', require('express-react-views').createEngine());
@@ -24,7 +25,8 @@ app.use((req, res, next) => {
     console.log('I run for all routes');
     next();
 });
-app.use(express.urlencoded({extended:false}));
+app.use(express.urlencoded({extended:false})); // enable access of req.body
+app.use(methodOverride('_method')); // enable to let forms make delete request
 
 //////routes//////
 //I.N.D.U.C.E.S
@@ -43,7 +45,13 @@ app.get("/fruits", (req, res) => {
 app.get('/fruits/new', (req, res) => {
     res.render('New');
 });
+
 //Delete
+app.delete('/fruits/:id', (req, res)=>{
+    Fruit.findByIdAndRemove(req.params.id, (err, data)=>{
+      res.redirect('/fruits');
+    })
+});
 
 //Update
 
@@ -60,6 +68,11 @@ app.post('/fruits', (req, res)=>{
 });
 
 //Edit
+app.get('/fruits/:id/edit', (req, res) => {
+    Fruit.findById(req.params.id, (err, foundFruit) => {
+      res.render('Edit', { fruit : foundFruit})
+    })
+})
 
 //Show
 app.get("/fruits/:id", (req, res) => {
