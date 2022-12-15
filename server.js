@@ -42,6 +42,7 @@ app.get("/fruits", (req, res) => {
   });
 
 //New
+//the new form will send POST request
 app.get('/fruits/new', (req, res) => {
     res.render('New');
 });
@@ -54,8 +55,22 @@ app.delete('/fruits/:id', (req, res)=>{
 });
 
 //Update
+//update data in the database when there is a PUT request from the edit page
+app.put('/fruits/:id', (req, res)=>{
+  if(req.body.readyToEat === 'on'){
+      req.body.readyToEat = true;
+  } else {
+      req.body.readyToEat = false;
+  }
+  Fruit.findByIdAndUpdate(req.params.id, req.body, (err, updatedFruit)=>{
+     console.log(updatedFruit)
+    res.redirect(`/fruits/${req.params.id}`);
+  });
+});
+
 
 //Create
+//add new fruit data to database when there is a POST request
 app.post('/fruits', (req, res)=>{
     if(req.body.readyToEat === 'on'){ //if checked, req.body.readyToEat is set to 'on'
         req.body.readyToEat = true; //do some data correction
@@ -68,6 +83,7 @@ app.post('/fruits', (req, res)=>{
 });
 
 //Edit
+//the edit form will send PUT request
 app.get('/fruits/:id/edit', (req, res) => {
     Fruit.findById(req.params.id, (err, foundFruit) => {
       res.render('Edit', { fruit : foundFruit})
